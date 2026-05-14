@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회의록 - 마케팅팀 주간회의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --accent: #3b82f6;
+            --accent-dark: #2563eb;
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            --gradient-bg: linear-gradient(135deg, #f5f7ff 0%, #ffffff 50%, #f0f4ff 100%);
+        }
+
+        body.dark-mode {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #16213e 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(180deg); }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            justify-content: flex-start;
+        }
+
+        .nav-btn {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            color: var(--accent-dark);
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
+        .header {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .meeting-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            text-align: left;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-weight: 600;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        .section ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section li {
+            padding: 12px;
+            background: transparent;
+            border-left: 3px solid var(--accent);
+            color: var(--text-primary);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* 액션 아이템 테이블 */
+        .action-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        .action-table th {
+            background: transparent;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--card-border);
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .action-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .action-table tr:hover {
+            background: var(--card-bg);
+        }
+
+        .owner {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .deadline {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary {
+            background: transparent;
+            border-left: 4px solid var(--accent);
+            padding: 16px;
+            border-radius: 4px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .next-meeting {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
+            border: 1px solid var(--card-border);
+            padding: 14px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            body::before {
+                display: none;
+            }
+
+            .theme-toggle,
+            .nav-buttons {
+                display: none;
+            }
+
+            .section,
+            .header {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+
+            .section {
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 24px;
+            }
+
+            .meeting-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .print-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ========== 네비게이션 메뉴 ========== */
+        .nav-menu {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: var(--card-bg);
+            color: var(--accent);
+            border-color: var(--card-border);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+            }
+
+            .nav-item {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <div class="container">
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">🏠 메인</a>
+            <a href="dashboard.html" class="nav-item">📊 대시보드</a>
+            <a href="meeting-result.html" class="nav-item active">📋 회의록</a>
+            <a href="diagram.html" class="nav-item">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-item">🔍 사이트 분석</a>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn print-btn" onclick="window.print()">🖨️ 인쇄</button>
+        </div>
+
+        <div class="header">
+            <h1>📋 마케팅팀 주간회의</h1>
+            <div class="meeting-info">
+                <div class="info-item">
+                    <div class="info-label">📅 회의 날짜</div>
+                    <div class="info-value">2026년 3월 10일 (월)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">👥 참석자</div>
+                    <div class="info-value">김대리, 이과장, 박사원, 정팀장</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">⏰ 다음 회의</div>
+                    <div class="info-value">3월 17일 (월) 오전 10시</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 지난주 진행사항 -->
+        <div class="section">
+            <h2>📊 지난주 진행사항</h2>
+            <ul>
+                <li>
+                    <strong>SNS 광고 캠페인 A/B 테스트 결과</strong> — B안(영상형)이 A안(이미지형) 대비 클릭률 2.3배 높음
+                </li>
+                <li>
+                    <strong>블로그 콘텐츠</strong> — 3건 발행 완료
+                </li>
+                <li>
+                    <strong>인플루언서 협업</strong> — 제안서 3곳 발송, 푸드스타일리 김OO로부터 회신 수락
+                </li>
+            </ul>
+        </div>
+
+        <!-- 논의 내용 요약 -->
+        <div class="section">
+            <h2>💬 주요 논의 사항</h2>
+            <div class="summary">
+                <p><strong>1. 4월 신제품 런칭 사전 티저 시점</strong><br>
+                3월 넷째 주부터 티저 콘텐츠 시작하기로 결정</p>
+
+                <p style="margin-top: 12px;"><strong>2. 영상 제작비 추가 예산</strong><br>
+                B안 기반 영상 광고 3개 추가 제작으로 인해 200만원 추가 예산 요청 예정</p>
+
+                <p style="margin-top: 12px;"><strong>3. 3월 프로모션 검토 일정</strong><br>
+                다음 회의에서 김대리의 프로모션 기획안 검토 예정</p>
+            </div>
+        </div>
+
+        <!-- 액션 아이템 -->
+        <div class="section">
+            <h2>✅ 액션 아이템</h2>
+            <table class="action-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">담당자</th>
+                        <th style="width: 50%;">할 일</th>
+                        <th style="width: 30%;">기한</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="owner">박사원</td>
+                        <td>B안 기반으로 영상 광고 3개 추가 제작</td>
+                        <td class="deadline">이번 주 중</td>
+                    </tr>
+                    <tr>
+                        <td class="owner">이과장</td>
+                        <td>인플루언서 미팅 일정 확정</td>
+                        <td class="deadline">금요일까지</td>
+                    </tr>
+                    <tr>
+                        <td class="owner">김대리</td>
+                        <td>3월 프로모션 기획안 초안 작성</td>
+                        <td class="deadline">수요일까지</td>
+                    </tr>
+                    <tr>
+                        <td class="owner">박사원</td>
+                        <td>경쟁사 C사 신규 캠페인 분석</td>
+                        <td class="deadline">이번 주 중</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="next-meeting">
+                📅 <strong>다음 회의:</strong> 2026년 3월 17일 (월) 오전 10시 — 3월 프로모션 기획안 검토 예정
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        // 현재 페이지 강조 기능
+        const navItems = document.querySelectorAll('.nav-item');
+        const currentPath = window.location.pathname;
+        const currentFile = currentPath.split('/').pop() || 'meeting-result.html';
+
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            const href = item.getAttribute('href');
+            const itemFile = href.split('/').pop();
+
+            if (itemFile === currentFile) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

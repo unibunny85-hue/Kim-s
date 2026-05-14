@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>업무 프로세스 다이어그램</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --accent: #3b82f6;
+            --accent-dark: #2563eb;
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            --gradient-bg: linear-gradient(135deg, #f5f7ff 0%, #ffffff 50%, #f0f4ff 100%);
+        }
+
+        body.dark-mode {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #16213e 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(180deg); }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ========== 네비게이션 메뉴 ========== */
+        .nav-menu {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: var(--card-bg);
+            color: var(--accent);
+            border-color: var(--card-border);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .diagram-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+            overflow-x: auto;
+        }
+
+        svg {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+            }
+
+            .nav-item {
+                text-align: center;
+            }
+
+            .header {
+                padding: 24px;
+            }
+
+            .diagram-container {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1>📌 업무 프로세스</h1>
+            <p>5단계 워크플로우: 기획 → 제작 → 검토 → 배포 → 분석</p>
+        </div>
+
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">🏠 메인</a>
+            <a href="dashboard.html" class="nav-item">📊 대시보드</a>
+            <a href="meeting-result.html" class="nav-item">📋 회의록</a>
+            <a href="diagram.html" class="nav-item active">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-item">🔍 사이트 분석</a>
+        </div>
+
+        <div class="diagram-container">
+            <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <style>
+                        .step-box {
+                            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+                            transition: all 0.3s ease;
+                        }
+                        .step-box:hover {
+                            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
+                        }
+                        .step-text {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+                            font-size: 15px;
+                            font-weight: 600;
+                            text-anchor: middle;
+                            dominant-baseline: middle;
+                        }
+                        .arrow {
+                            stroke: #999;
+                            stroke-width: 2;
+                            fill: none;
+                            marker-end: url(#arrowhead);
+                        }
+                    </style>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#999"/>
+                    </marker>
+                </defs>
+
+                <!-- 배경 -->
+                <rect width="800" height="200" fill="none"/>
+
+                <!-- 화살표 선 -->
+                <line x1="130" y1="100" x2="150" y2="100" class="arrow"/>
+                <line x1="250" y1="100" x2="270" y2="100" class="arrow"/>
+                <line x1="370" y1="100" x2="390" y2="100" class="arrow"/>
+                <line x1="490" y1="100" x2="510" y2="100" class="arrow"/>
+
+                <!-- Step 1: 기획 -->
+                <g class="step-box">
+                    <rect x="20" y="50" width="110" height="100" rx="12" ry="12" fill="#B3D9FF" stroke="#6BA3D9" stroke-width="2"/>
+                    <text x="75" y="100" class="step-text" fill="#2C5AA0">기획</text>
+                </g>
+
+                <!-- Step 2: 제작 -->
+                <g class="step-box">
+                    <rect x="160" y="50" width="110" height="100" rx="12" ry="12" fill="#C1F5C1" stroke="#6BC16B" stroke-width="2"/>
+                    <text x="215" y="100" class="step-text" fill="#2D7A2D">제작</text>
+                </g>
+
+                <!-- Step 3: 검토 -->
+                <g class="step-box">
+                    <rect x="300" y="50" width="110" height="100" rx="12" ry="12" fill="#FFE6B3" stroke="#F5BF40" stroke-width="2"/>
+                    <text x="355" y="100" class="step-text" fill="#B37A00">검토</text>
+                </g>
+
+                <!-- Step 4: 배포 -->
+                <g class="step-box">
+                    <rect x="440" y="50" width="110" height="100" rx="12" ry="12" fill="#FFD9B3" stroke="#F5A340" stroke-width="2"/>
+                    <text x="495" y="100" class="step-text" fill="#B35A00">배포</text>
+                </g>
+
+                <!-- Step 5: 분석 -->
+                <g class="step-box">
+                    <rect x="580" y="50" width="110" height="100" rx="12" ry="12" fill="#FFB3D9" stroke="#F540A0" stroke-width="2"/>
+                    <text x="635" y="100" class="step-text" fill="#B3007A">분석</text>
+                </g>
+
+                <!-- 단계 번호 -->
+                <text x="75" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">1단계</text>
+                <text x="215" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">2단계</text>
+                <text x="355" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">3단계</text>
+                <text x="495" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">4단계</text>
+                <text x="635" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">5단계</text>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        // 현재 페이지 강조 기능
+        const navItems = document.querySelectorAll('.nav-item');
+        const currentPath = window.location.pathname;
+        const currentFile = currentPath.split('/').pop() || 'diagram.html';
+
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            const href = item.getAttribute('href');
+            const itemFile = href.split('/').pop();
+
+            if (itemFile === currentFile) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

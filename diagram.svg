@@ -1,0 +1,80 @@
+<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .step-box {
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+        transition: all 0.3s ease;
+      }
+      .step-box:hover {
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
+      }
+      .step-text {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+      .arrow {
+        stroke: #999;
+        stroke-width: 2;
+        fill: none;
+        marker-end: url(#arrowhead);
+      }
+      .arrow-line {
+        stroke: #ddd;
+        stroke-width: 2;
+        fill: none;
+      }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#999"/>
+    </marker>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="800" height="200" fill="none"/>
+
+  <!-- 화살표 선 -->
+  <line x1="130" y1="100" x2="150" y2="100" class="arrow"/>
+  <line x1="250" y1="100" x2="270" y2="100" class="arrow"/>
+  <line x1="370" y1="100" x2="390" y2="100" class="arrow"/>
+  <line x1="490" y1="100" x2="510" y2="100" class="arrow"/>
+
+  <!-- Step 1: 기획 -->
+  <g class="step-box">
+    <rect x="20" y="50" width="110" height="100" rx="12" ry="12" fill="#B3D9FF" stroke="#6BA3D9" stroke-width="2"/>
+    <text x="75" y="100" class="step-text" fill="#2C5AA0">기획</text>
+  </g>
+
+  <!-- Step 2: 제작 -->
+  <g class="step-box">
+    <rect x="160" y="50" width="110" height="100" rx="12" ry="12" fill="#C1F5C1" stroke="#6BC16B" stroke-width="2"/>
+    <text x="215" y="100" class="step-text" fill="#2D7A2D">제작</text>
+  </g>
+
+  <!-- Step 3: 검토 -->
+  <g class="step-box">
+    <rect x="300" y="50" width="110" height="100" rx="12" ry="12" fill="#FFE6B3" stroke="#F5BF40" stroke-width="2"/>
+    <text x="355" y="100" class="step-text" fill="#B37A00">검토</text>
+  </g>
+
+  <!-- Step 4: 배포 -->
+  <g class="step-box">
+    <rect x="440" y="50" width="110" height="100" rx="12" ry="12" fill="#FFD9B3" stroke="#F5A340" stroke-width="2"/>
+    <text x="495" y="100" class="step-text" fill="#B35A00">배포</text>
+  </g>
+
+  <!-- Step 5: 분석 -->
+  <g class="step-box">
+    <rect x="580" y="50" width="110" height="100" rx="12" ry="12" fill="#FFB3D9" stroke="#F540A0" stroke-width="2"/>
+    <text x="635" y="100" class="step-text" fill="#B3007A">분석</text>
+  </g>
+
+  <!-- 단계 번호 (선택사항) -->
+  <text x="75" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">1단계</text>
+  <text x="215" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">2단계</text>
+  <text x="355" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">3단계</text>
+  <text x="495" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">4단계</text>
+  <text x="635" y="30" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #999; text-anchor: middle;">5단계</text>
+</svg>

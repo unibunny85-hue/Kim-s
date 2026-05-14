@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김비서를 소개합니다</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --accent: #3b82f6;
+            --accent-dark: #2563eb;
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            --gradient-bg: linear-gradient(135deg, #f5f7ff 0%, #ffffff 50%, #f0f4ff 100%);
+        }
+
+        body.dark-mode {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #16213e 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 배경 애니메이션 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(180deg); }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--card-bg);
+            border-color: var(--accent);
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 80px 40px 60px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+            border-radius: 24px;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 42px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            line-height: 1.8;
+            backdrop-filter: blur(10px);
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 50px;
+            text-align: left;
+        }
+
+        .feature {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border-left: 3px solid var(--accent);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .feature:hover {
+            transform: translateX(8px);
+            border-left: 4px solid var(--accent);
+            background: var(--card-bg);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .feature-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <div class="nav-menu">
+        <a href="index.html" class="nav-item active">🏠 메인</a>
+        <a href="dashboard.html" class="nav-item">📊 대시보드</a>
+        <a href="meeting-result.html" class="nav-item">📋 회의록</a>
+        <a href="diagram.html" class="nav-item">📌 업무 프로세스</a>
+        <a href="report.html" class="nav-item">🔍 사이트 분석</a>
+    </div>
+
+    <div class="container">
+        <h1>김비서를 소개합니다</h1>
+        <p class="subtitle">
+            당신의 일상 업무를 스마트하게 정리해주는<br>
+            지능형 업무 관리 보조자
+        </p>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-title">✓ 할 일 정리</div>
+                <div class="feature-desc">우선순위별로 업무를 관리하고 진행 상황을 한눈에 파악합니다</div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">✓ 일정 관리</div>
+                <div class="feature-desc">주간 일정을 체계적으로 정리하여 시간 관리를 효율적으로 합니다</div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">✓ 성과 추적</div>
+                <div class="feature-desc">프로젝트 진행률과 매출 데이터를 시각적으로 모니터링합니다</div>
+            </div>
+        </div>
+
+        <a href="dashboard.html" class="cta-button">내 대시보드 보기 →</a>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        // localStorage에서 저장된 테마 로드
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // 초기 테마 설정
+        setTheme(savedTheme);
+
+        // 테마 토글
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        // 현재 페이지 강조 기능
+        const navItems = document.querySelectorAll('.nav-item');
+        const currentPath = window.location.pathname;
+        const currentFile = currentPath.split('/').pop() || 'index.html';
+
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            const href = item.getAttribute('href');
+            const itemFile = href.split('/').pop();
+
+            if (itemFile === currentFile) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
